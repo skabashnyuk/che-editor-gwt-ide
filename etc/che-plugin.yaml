@@ -21,8 +21,8 @@ containers:
  - name: che-editor-gwt-ide
    image: ksmster/che-editor-gwt-ide
    env:
-       - name: VAR
-         value: local-dir:///plugins
+       - name: SERVER_PORT
+         value: 8080
    volumes:
        - mountPath: "/plugins"
          name: plugins
