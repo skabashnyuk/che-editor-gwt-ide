@@ -1,37 +1,34 @@
 version: 1.0.0
 type: Che Editor
-name: theia-ide
-id: org.eclipse.che.editor.theia
-title: Eclipse Theia for Eclipse Che
-Description: Eclipse Theia
+name: gwt-ide
+id: org.eclipse.che.editor.gwt
+title: Eclipse GWT IDE  for Eclipse Che
+Description: Eclipse GWT IDE
 Icon: https://pbs.twimg.com/profile_images/929088242456190976/xjkS2L-0_400x400.jpg
 endpoints:
- -  name: "theia"
+ -  name: "сhe-ide"
     public: true
-    targetPort: 3000
+    targetPort: 8085
     attributes:
       protocol: http
       type: ide
- -  name: "theia-dev"
+ -  name: "сhe-master"
     public: true
-    targetPort: 3030
+    targetPort: 8087
     attributes:
       protocol: http
-      type: ide-dev
 containers:
- - name: theia-ide
-   image: eclipse/che-theia:0.3.14-nightly
+ - name: che-editor-gwt-ide
+   image: ksmster/che-editor-gwt-ide
    env:
-       - name: THEIA_PLUGINS
+       - name: VAR
          value: local-dir:///plugins
-       - name: HOSTED_PLUGIN_HOSTNAME
-         value: 0.0.0.0
    volumes:
        - mountPath: "/plugins"
          name: plugins
        - mountPath: "/projects"
          name: projects
    ports:
-       - exposedPort: 3000
-       - exposedPort: 3030
+       - exposedPort: 8085
+       - exposedPort: 8087
    memory-limit: "512M"

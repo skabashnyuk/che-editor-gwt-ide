@@ -11,10 +11,17 @@
 
 FROM registry.centos.org/che-stacks/centos-stack-base
 
-EXPOSE 4403 8080 8000 9876 22
+EXPOSE 8085 8087
 
 
-ENV TOMCAT_VERSION=8.5.23
+RUN sudo yum -y update && \
+    sudo yum install -y epel-release
+
+RUN sudo yum install -y supervisor &&\
+    sudo yum clean all 
+
+
+
 
 RUN mkdir $HOME/.m2 && \
    wget -O  /home/user/tomcat8.zip "https://oss.sonatype.org/content/repositories/releases/org/eclipse/che/lib/che-tomcat8-slf4j-logback/6.11.0/che-tomcat8-slf4j-logback-6.11.0.zip" ;\
@@ -38,5 +45,20 @@ RUN mkdir /home/user/traefik ;\
 COPY traefik.toml /home/user/traefik/
 ADD entrypoint.sh /home/user/entrypoint.sh
 
-ENTRYPOINT ["/home/user/entrypoint.sh"]
-CMD tail -f /dev/null
+RUN mkdir /tmp/agent
+
+COPY --from=eclipse/che-server:6.11.1 /home/user/eclipse-che/tomcat/webapps/ROOT.war /home/user/tomcat8/webapps/ide.war
+COPY --from=eclipse/che-server:6.11.1 /home/user/eclipse-che/lib/ws-agent.tar.gz /tmp/agent
+
+RUN cd /tmp/agent && tar -xvf ws-agent.tar.gz && cp webapps/ROOT.war /home/user/tomcat8/webapps/ && rm -rf /tmp/agent
+
+
+
+# Change permissions to allow editing of files for openshift user
+RUN find ${HOME} -exec sh -c "sudo chgrp 0 {}; sudo chmod g+rwX {}" \;
+# Grant permissions for modifying supervisor log file
+RUN sudo touch /var/log/supervisord.log && sudo chmod g+rwX /var/log/supervisord.log && sudo chgrp 0 /var/log/supervisord.log
+
+ADD supervisord.conf /etc/
+
+ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
