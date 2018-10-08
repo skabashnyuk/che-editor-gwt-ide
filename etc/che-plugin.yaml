@@ -6,17 +6,22 @@ title: Eclipse GWT IDE  for Eclipse Che
 Description: Eclipse GWT IDE
 Icon: https://pbs.twimg.com/profile_images/929088242456190976/xjkS2L-0_400x400.jpg
 endpoints:
- -  name: "wsagent-http"
+ -  name: "che-gwt-ide-master"
     public: true
     targetPort: 8085
     attributes:
       protocol: http
       type: ide
- -  name: "che-gwt-ide-master"
+ -  name: "wsagent-http"
     public: true
     targetPort: 8087
     attributes:
       protocol: http
+-  name: "wsagent-ws"
+    public: true
+    targetPort: 8087
+    attributes:
+      protocol: ws
 containers:
  - name: che-editor-gwt-ide
    image: ksmster/che-editor-gwt-ide
