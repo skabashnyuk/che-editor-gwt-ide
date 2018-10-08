@@ -17,7 +17,7 @@ endpoints:
     targetPort: 8087
     attributes:
       protocol: http
--  name: "wsagent-ws"
+ -  name: "wsagent-ws"
     public: true
     targetPort: 8087
     attributes:
