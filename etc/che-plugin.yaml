@@ -17,11 +17,13 @@ endpoints:
     targetPort: 8087
     attributes:
       protocol: http
+      path : api
  -  name: "wsagent-ws"
     public: true
     targetPort: 8087
     attributes:
       protocol: ws
+      path : wsagent
 containers:
  - name: che-editor-gwt-ide
    image: ksmster/che-editor-gwt-ide
