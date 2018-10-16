@@ -12,18 +12,21 @@ endpoints:
     attributes:
       protocol: http
       type: ide
- -  name: "wsagent-http"
+      discoverable: false
+ -  name: "wsagent/http"
     public: true
     targetPort: 8087
     attributes:
       protocol: http
       path : api
- -  name: "wsagent-ws"
+      discoverable: false
+ -  name: "wsagent/ws"
     public: true
     targetPort: 8087
     attributes:
       protocol: ws
       path : wsagent
+      discoverable: false
 containers:
  - name: che-editor-gwt-ide
    image: ksmster/che-editor-gwt-ide

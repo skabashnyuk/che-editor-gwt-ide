@@ -39,6 +39,8 @@ ENV LD_LIBRARY_PATH=\
  TERM=xterm 
 
 
+RUN touch /home/user/.gitconfig
+
 RUN mkdir /home/user/traefik ;\
     wget -O /home/user/traefik/traefik "https://github.com/containous/traefik/releases/download/v1.4.3/traefik_linux-amd64"; \
     chmod +x /home/user/traefik/traefik
@@ -47,8 +49,8 @@ ADD entrypoint.sh /home/user/entrypoint.sh
 
 RUN mkdir /tmp/agent
 
-COPY --from=eclipse/che-server:6.11.1 /home/user/eclipse-che/tomcat/webapps/ROOT.war /home/user/tomcat8/webapps/ide.war
-COPY --from=eclipse/che-server:6.11.1 /home/user/eclipse-che/lib/ws-agent.tar.gz /tmp/agent
+COPY --from=eclipse/che-server:nightly /home/user/eclipse-che/tomcat/webapps/ROOT.war /home/user/tomcat8/webapps/ide.war
+COPY --from=eclipse/che-server:nightly /home/user/eclipse-che/lib/ws-agent.tar.gz /tmp/agent
 
 RUN cd /tmp/agent && tar -xvf ws-agent.tar.gz && cp webapps/ROOT.war /home/user/tomcat8/webapps/ && rm -rf /tmp/agent
 
