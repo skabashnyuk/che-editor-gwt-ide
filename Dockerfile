@@ -18,7 +18,8 @@ RUN sudo yum -y update && \
     sudo yum install -y epel-release
 
 RUN sudo yum install -y supervisor &&\
-    sudo yum clean all 
+    sudo yum clean all  && \
+    sudo usermod -p "*" user
 
 
 
@@ -33,6 +34,27 @@ RUN mkdir $HOME/.m2 && \
   
 
 USER user
+
+# The following instructions set the right
+# permissions and scripts to allow the container
+# to be run by an arbitrary user (i.e. a user
+# that doesn't already exist in /etc/passwd)
+ENV HOME /home/user
+RUN for f in "/home/user" "/etc/passwd" "/etc/group" "/projects"; do\
+           sudo chgrp -R 0 ${f} && \
+           sudo chmod -R g+rwX ${f}; \
+        done && \
+        # Generate passwd.template \
+        cat /etc/passwd | \
+        sed s#user:x.*#user:x:\${USER_ID}:\${GROUP_ID}::\${HOME}:/bin/bash#g \
+        > /home/user/passwd.template && \
+        # Generate group.template \
+        cat /etc/group | \
+        sed s#root:x:0:#root:x:0:0,\${USER_ID}:#g \
+        > /home/user/group.template && \
+        sudo sed -ri 's/StrictModes yes/StrictModes no/g' /etc/ssh/sshd_config
+
+
 
 ENV LD_LIBRARY_PATH=\
  TOMCAT_HOME=/home/user/tomcat8 \
@@ -68,4 +90,5 @@ RUN sudo touch /var/log/supervisord.log && sudo chmod g+rwX /var/log/supervisord
 
 ADD supervisord.conf /etc/
 
-ENTRYPOINT ["/usr/bin/supervisord", "-n", "-c", "/etc/supervisord.conf"]
+ENTRYPOINT ["/home/user/entrypoint.sh"]
+CMD /usr/bin/supervisord -n -c /etc/supervisord.conf

@@ -10,6 +10,7 @@
 # Contributors:
 #   Red Hat, Inc. - initial API and implementation
 #
+
 set -e
 
 export USER_ID=$(id -u)
@@ -30,12 +31,4 @@ if ! grep -Fq "${USER_ID}" /etc/passwd; then
     sed "s/\${HOME}/\/home\/user/g" > /etc/group
 fi
 
-is_current_user_sudoer() {
-    sudo -n true > /dev/null 2>&1
-}
-
-
-if ! is_current_user_sudoer; then
-    sed -i "s/che-host/che-host.eclipse-che.svc/g" /home/user/traefik/traefik.toml
-fi
 exec "$@"
