@@ -63,4 +63,6 @@ containers:
    ports:
        - exposedPort: 8085
        - exposedPort: 8087
+       - exposedPort: 4411
+       - exposedPort: 4412
    memory-limit: "512M"
