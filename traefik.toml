@@ -64,8 +64,8 @@ defaultEntryPoints = ["http"]
     backend = "backend1"
     passHostHeader = true
     [frontends.frontend1.redirect]
-      regex = "^http://localhost/gwt/ide/sidecar/entrypoint"
-      replacement = "http://localhost/che/wksp-jocv"
+      regex = "^(http|https)://(.*)/gwt/ide/sidecar/entrypoint"
+      replacement = "$1://$2/che_workspace_namespace_placeholder/che_workspace_name_placeholder"
     [frontends.frontend1.routes.ide]
     rule = "PathPrefix: /; AddPrefix: /ide"
   [frontends.frontend3]
