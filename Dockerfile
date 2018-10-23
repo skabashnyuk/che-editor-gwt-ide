@@ -48,8 +48,18 @@ RUN mkdir /tmp/agent
 
 COPY --from=eclipse/che-server:nightly /home/user/eclipse-che/tomcat/webapps/ROOT.war /home/user/tomcat8/webapps/ide.war
 COPY --from=eclipse/che-server:nightly /home/user/eclipse-che/lib/ws-agent.tar.gz /tmp/agent
+COPY --from=eclipse/che-server:nightly /home/user/eclipse-che/lib/linux_amd64/exec /tmp/agent
+COPY --from=eclipse/che-server:nightly /home/user/eclipse-che/lib/linux_amd64/terminal /tmp/agent
 
-RUN cd /tmp/agent && tar -xvf ws-agent.tar.gz && cp webapps/ROOT.war /home/user/tomcat8/webapps/ && rm -rf /tmp/agent
+
+RUN cd /tmp/agent && \
+    tar -xf ws-agent.tar.gz  && \
+    mkdir -p /home/user/exec-agent/ && \
+    tar -xf exec-agent-linux_amd64.tar.gz -C /home/user/exec-agent/ && \
+    mkdir -p /home/user/terminal/ && \
+    tar -xf websocket-terminal-linux_amd64.tar.gz -C /home/user/terminal/ && \
+    cp webapps/ROOT.war /home/user/tomcat8/webapps/ && \
+    rm -rf /tmp/agent
 
 
 

@@ -28,6 +28,27 @@ endpoints:
       protocol: ws
       path : wsagent
       discoverable: false
+ -  name: "exec-agent/http"
+    public: true
+    targetPort: 4412
+    attributes:
+      protocol: http
+      path : process
+      discoverable: false
+ -  name: "exec-agent/ws"
+    public: true
+    targetPort: 4412
+    attributes:
+      protocol: ws
+      path : connect
+      discoverable: false
+ -  name: "terminal"
+    public: true
+    targetPort: 4411
+    attributes:
+      protocol: ws
+      path : pty
+      discoverable: false
 containers:
  - name: che-editor-gwt-ide
    image: ksmster/che-editor-gwt-ide
